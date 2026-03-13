@@ -1,0 +1,5 @@
+{"level":"info","message":"🚀 Server running on port 3000 in production mode","service":"gateway-api","timestamp":"2026-03-13T08:34:02.096Z"}
+{"level":"info","message":"🚀 Server running on port 3000 in production mode","service":"gateway-api","timestamp":"2026-03-13T08:43:43.241Z"}
+{"level":"info","message":"🚀 Server running on port 3000 in production mode","service":"gym-saas-api","timestamp":"2026-03-13T08:48:44.240Z"}
+{"level":"info","message":"[GET] /api/health - Status: 200","service":"gym-saas-api","timestamp":"2026-03-13T08:49:03.073Z"}
+{"level":"info","message":"::1 - - [13/Mar/2026:08:49:03 +0000] \"GET /api/health HTTP/1.1\" 200 146 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36\"","service":"gym-saas-api","timestamp":"2026-03-13T08:49:03.074Z"}
