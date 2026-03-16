@@ -1,15 +1,14 @@
-import registerDependencies from '@/config/container.js';
 import env from '@/config/environment.js';
 import ExpressAppFactory from '@/shared/factories/express.app.factory.js';
 import { logger } from '@/shared/logger.js';
 import gymRouter from '@/module/gym/interfaces/gym.routes.js';
+import userRouter from '@/module/user/interfaces/user.routes.js';
 
 class App {
   private readonly expressAppFactory: ExpressAppFactory;
   private server: any;
 
   constructor() {
-    registerDependencies();
     this.expressAppFactory = new ExpressAppFactory();
     this.setupModuleRoute();
   }
@@ -27,6 +26,7 @@ class App {
 
   private setupModuleRoute() {
     this.expressAppFactory.addRoutes('/api/gym', gymRouter);
+    this.expressAppFactory.addRoutes('/api/user', userRouter);
   }
 
   private setupGracefulShutdown(): void {

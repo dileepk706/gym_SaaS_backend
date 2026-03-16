@@ -10,6 +10,9 @@
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
+    "migrate:up": "node-pg-migrate up --migrations-dir src/database/migrations",
+    "migrate:down": "node-pg-migrate down --migrations-dir src/database/migrations",
+    "migrate:create": "node-pg-migrate create --migrations-dir src/database/migrations",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

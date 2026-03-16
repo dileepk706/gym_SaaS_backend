@@ -36,7 +36,7 @@ export const errorHandler = (err: any, req: Request, res: Response, _next: NextF
     message = err.message;
   }
 
-  logger.error('Validation error:', {
+  logger.error('Validation error:', req.originalUrl, {
     error: {
       message,
       stack: err.stack,
@@ -55,6 +55,7 @@ export const errorHandler = (err: any, req: Request, res: Response, _next: NextF
   res.status(statusCode).json({
     error: {
       message,
+      statusCode,
       ...(env.NODE_ENV === 'development' && { stack: err.stack }),
     },
     timestamp: new Date().toISOString(),

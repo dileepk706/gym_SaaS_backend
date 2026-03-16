@@ -9,7 +9,15 @@ class GymController implements IGymController {
   constructor(@inject('IGymService') private readonly gymService: IGymService) {}
 
   async getGymById(req: Request, res: Response): Promise<void> {
-    const gym = await this.gymService.getGymById(parseInt(req.params.id as string));
+    const gym = await this.gymService.getGymById(req.params.id as string);
+
+    if (!gym) {
+      res.status(404).json({
+        success: false,
+        message: 'Gym not found',
+      });
+      return;
+    }
 
     res.status(200).json({
       success: true,
