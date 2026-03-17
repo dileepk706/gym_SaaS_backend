@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, Router } from 'express';
+import express, { Express, Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { logger } from '@/shared/logger.js';
@@ -8,6 +8,7 @@ import env from '@/config/environment.js';
 import compression from 'compression';
 import httpStatus from 'http-status';
 import { errorHandler } from '@/shared/middleware/error_handler.js';
+import { registerRoutes } from '@/routes/index.js';
 
 class ExpressAppFactory {
   private readonly app: Express;
@@ -15,11 +16,12 @@ class ExpressAppFactory {
 
   constructor() {
     this.app = express();
-    this.setupMiddleWare();
-    this.setupRoutes();
+    this.setupMiddleware();
+    this.setupHealthChecks();
+    this.setupModuleRoutes();
   }
 
-  private setupMiddleWare(): void {
+  private setupMiddleware(): void {
     this.app.use(requestLogger);
     this.app.use(express.json());
     this.app.use(helmet());
@@ -37,7 +39,7 @@ class ExpressAppFactory {
     );
   }
 
-  private setupRoutes(): void {
+  private setupHealthChecks(): void {
     this.app.get('/health', (req: Request, res: Response) => {
       res.status(httpStatus.OK).json({
         status: 'OK',
@@ -56,12 +58,16 @@ class ExpressAppFactory {
     });
   }
 
-  private setupErrorHandling(): void {
-    this.app.use(errorHandler);
+  /**
+   * Register all module routes via the central route registry.
+   * No need to manually add routes here — just update `src/routes/index.ts`.
+   */
+  private setupModuleRoutes(): void {
+    this.app.use(registerRoutes());
   }
 
-  public addRoutes(path: string, router: Router): void {
-    this.app.use(path, router);
+  private setupErrorHandling(): void {
+    this.app.use(errorHandler);
   }
 
   public getApp = (): Express => this.app;

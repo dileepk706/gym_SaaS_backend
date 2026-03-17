@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import 'dotenv/config';
 import registerDependencies from '@/config/container.js';
 
