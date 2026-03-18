@@ -4,9 +4,10 @@ import { authenticate, authorizeAdmin } from '@/shared/middleware/auth.js';
 import type { ModuleRouteConfig, RouteGroupMiddleware } from '@/routes/route.types.js';
 
 import { gymRouteConfig } from '@/module/gym/interfaces/gym.routes.js';
-import { userRouteConfig } from '@/module/user/interfaces/user.routes.js';
+import { userRouteConfig } from '@/module/user/interfaces/route/user.routes.js';
+import { tokenRouteConfig } from '@/module/token/interfaces/token.routes.js';
 
-const moduleRoutes: ModuleRouteConfig[] = [gymRouteConfig, userRouteConfig];
+const moduleRoutes: ModuleRouteConfig[] = [gymRouteConfig, userRouteConfig, tokenRouteConfig];
 
 const groupMiddleware: RouteGroupMiddleware = {
   public: [],

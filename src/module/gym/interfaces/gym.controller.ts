@@ -3,6 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import IGymController from '@/module/gym/domain/interfaces/gym.controller.interface.js';
 import { IGymService } from '@/module/gym/domain/interfaces/gym.service.interface.js';
+import { responseHandler } from '@/shared/response_handler.js';
 
 @injectable()
 class GymController implements IGymController {
@@ -24,6 +25,10 @@ class GymController implements IGymController {
       data: gym,
     });
   }
+
+  getAllGyms = async (req: Request, res: Response) => {
+    return responseHandler(res, { result: req.user }, 'Gyms fetched successfully', 200);
+  };
 }
 
 export default GymController;

@@ -3,5 +3,6 @@ import UserEntity from '@/module/user/domain/entites/user.entity.js';
 
 export default interface IUserService {
   createUser(user: CreateUserDto): Promise<UserEntity>;
-  getAllUsers(): Promise<UserEntity[]>;
+  findUserByEmail: (email: string) => Promise<UserEntity | null>;
+  validateUser: (user: { email: string; password: string }) => Promise<UserEntity>;
 }

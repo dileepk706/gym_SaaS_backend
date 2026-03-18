@@ -8,17 +8,22 @@ import { Pool } from 'pg';
 class UserRepository implements IUserRepository {
   constructor(@inject(Pool) private readonly pool: Pool) {}
 
-  createUser = async (user: CreateUserDto): Promise<UserEntity> => {
+  create = async (user: CreateUserDto): Promise<UserEntity> => {
     const result = await this.pool.query(
-      `INSERT INTO users (name,email,password) VALUES ($1,$2,$3) RETURNING *`,
-      [user.name, user.email, user.password],
+      `INSERT INTO users (email,password) VALUES ($1,$2) RETURNING *`,
+      [user.email, user.password],
     );
     return result.rows[0];
   };
 
-  getAllUsers = async (): Promise<UserEntity[]> => {
+  findAll = async (): Promise<UserEntity[]> => {
     const result = await this.pool.query(`SELECT * FROM users`);
     return result.rows;
+  };
+
+  findByEmail = async (email: string): Promise<UserEntity | null> => {
+    const result = await this.pool.query(`SELECT * FROM users WHERE email=$1`, [email]);
+    return result.rows[0] || null;
   };
 }
 

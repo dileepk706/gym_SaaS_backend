@@ -1,12 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
 import httpStatus from 'http-status';
+import jwt from 'jsonwebtoken';
+import env from '@/config/environment.js';
+import { logger } from '@/shared/logger.js';
+import { ApiError } from '@/shared/middleware/error_handler.js';
 
-/**
- * Authentication middleware — validates JWT / session tokens.
- *
- * TODO: Replace the stub implementation with real JWT verification
- *       (e.g. using `jsonwebtoken` or an OAuth provider SDK).
- */
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   const authHeader = req.headers.authorization;
 
@@ -21,20 +19,15 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
   const token = authHeader.split(' ')[1];
 
   try {
-    // TODO: Replace with real JWT verification
-    // const decoded = jwt.verify(token, env.JWT_SECRET);
-    // req.user = decoded;
-
-    if (!token) {
-      throw new Error('Invalid token');
-    }
-
+    const decoded = jwt.verify(token, env.ACCESS_SECRET) as any;
+    req.user = decoded;
     next();
-  } catch {
-    res.status(httpStatus.UNAUTHORIZED).json({
-      success: false,
-      message: 'Invalid or expired token.',
-    });
+  } catch (err: any) {
+    logger.error(err);
+    if (err.name === 'TokenExpiredError') {
+      throw new ApiError('Access token expired', httpStatus.UNAUTHORIZED);
+    }
+    throw new ApiError('Invalid token.', httpStatus.UNAUTHORIZED);
   }
 };
 
@@ -45,14 +38,14 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
  *
  * TODO: Implement real role checking once the user model supports roles.
  */
-export const authorizeAdmin = (req: Request, _res: Response, next: NextFunction): void => {
-  // TODO: Replace with real role checking
-  // if (req.user?.role !== 'admin') {
-  //   return res.status(httpStatus.FORBIDDEN).json({
-  //     success: false,
-  //     message: 'Admin access required.',
-  //   });
-  // }
+export const authorizeAdmin = (req: Request, res: Response, next: NextFunction): void => {
+  if (req.user?.role !== 'admin') {
+    res.status(httpStatus.FORBIDDEN).json({
+      success: false,
+      message: 'Admin access required.',
+    });
+    return;
+  }
 
   next();
 };

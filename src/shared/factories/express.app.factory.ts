@@ -1,14 +1,18 @@
 import express, { Express, Request, Response } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { logger } from '@/shared/logger.js';
-import { requestLogger } from '@/shared/middleware/requestLogger.js';
 import cors from 'cors';
-import env from '@/config/environment.js';
+import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
 import compression from 'compression';
 import httpStatus from 'http-status';
+//
+import { logger } from '@/shared/logger.js';
+import { requestLogger } from '@/shared/middleware/requestLogger.js';
+import env from '@/config/environment.js';
 import { errorHandler } from '@/shared/middleware/error_handler.js';
 import { registerRoutes } from '@/routes/index.js';
+import swaggerSpecs from '@/config/swagger.js';
 
 class ExpressAppFactory {
   private readonly app: Express;
@@ -17,11 +21,25 @@ class ExpressAppFactory {
   constructor() {
     this.app = express();
     this.setupMiddleware();
+    this.setupSwagger();
     this.setupHealthChecks();
     this.setupModuleRoutes();
   }
 
+  private setupSwagger(): void {
+    this.app.use(
+      '/api-docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerSpecs, {
+        explorer: true,
+        customCss: '.swagger-ui .topbar { display: none }',
+      }),
+    );
+    logger.info(`📚 Swagger documentation accessible at /api-docs`);
+  }
+
   private setupMiddleware(): void {
+    this.app.use(cookieParser());
     this.app.use(requestLogger);
     this.app.use(express.json());
     this.app.use(helmet());
@@ -40,6 +58,16 @@ class ExpressAppFactory {
   }
 
   private setupHealthChecks(): void {
+    /**
+     * @swagger
+     * /health:
+     *   get:
+     *     summary: Basic health check
+     *     tags: [Health]
+     *     responses:
+     *       200:
+     *         description: Basic health status
+     */
     this.app.get('/health', (req: Request, res: Response) => {
       res.status(httpStatus.OK).json({
         status: 'OK',
@@ -47,6 +75,16 @@ class ExpressAppFactory {
       });
     });
 
+    /**
+     * @swagger
+     * /api/health:
+     *   get:
+     *     summary: Detailed API health check
+     *     tags: [Health]
+     *     responses:
+     *       200:
+     *         description: Detailed API health status including service name and mode
+     */
     this.app.get('/api/health', (req: Request, res: Response) => {
       res.status(httpStatus.OK).json({
         status: 'OK',
@@ -58,10 +96,6 @@ class ExpressAppFactory {
     });
   }
 
-  /**
-   * Register all module routes via the central route registry.
-   * No need to manually add routes here — just update `src/routes/index.ts`.
-   */
   private setupModuleRoutes(): void {
     this.app.use(registerRoutes());
   }

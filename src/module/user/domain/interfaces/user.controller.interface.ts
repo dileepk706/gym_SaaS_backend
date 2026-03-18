@@ -2,5 +2,4 @@ import { NextFunction, Request, Response } from 'express';
 
 export default interface IUserController {
   createUser(req: Request, res: Response, next: NextFunction): Promise<any>;
-  getAllUsers(req: Request, res: Response, next: NextFunction): Promise<any>;
 }

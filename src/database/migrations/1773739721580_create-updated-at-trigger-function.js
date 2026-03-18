@@ -33,5 +33,5 @@ export const up = (pgm) => {
  * @returns {Promise<void> | void}
  */
 export const down = (pgm) => {
-  pgm.dropFunction('set_updated_at');
+  pgm.dropTable('set_updated_at');
 };
