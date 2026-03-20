@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 
 import IGymController from '@/module/gym/domain/interfaces/gym.controller.interface.js';
 import { IGymService } from '@/module/gym/domain/interfaces/gym.service.interface.js';
-import { responseHandler } from '@/shared/response_handler.js';
+import { sendSuccess } from '@/shared/response_handler.js';
 import { ApiError } from '@/shared/middleware/error_handler.js';
 
 @injectable()
@@ -15,17 +15,17 @@ class GymController implements IGymController {
 
     if (!gym) throw new ApiError('Gym not found', 404);
 
-    return responseHandler(res, { result: gym }, 'Gym fetched successfully', 200);
+    return sendSuccess(res, { result: gym }, 'Gym fetched successfully', 200);
   }
 
   create = async (req: Request, res: Response): Promise<any> => {
     const gym = await this.gymService.create(req.body);
-    return responseHandler(res, { result: gym }, 'Gym created successfully', 201);
+    return sendSuccess(res, { result: gym }, 'Gym created successfully', 201);
   };
 
   updateById = async (req: Request, res: Response): Promise<any> => {
     const gym = await this.gymService.updateById(req.params.id as string, req.body);
-    return responseHandler(res, { result: gym }, 'Gym updated successfully', 200);
+    return sendSuccess(res, { result: gym }, 'Gym updated successfully', 200);
   };
 }
 

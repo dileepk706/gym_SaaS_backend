@@ -7,6 +7,7 @@ type Staff = {
   name: string;
   email: string;
   phone: string;
+  check_in_code: number;
   created_at: Date;
   updated_at: Date;
   created_on: number;
@@ -16,3 +17,5 @@ type Staff = {
 export default Staff;
 
 export type StaffPartial = Partial<Staff>;
+
+//

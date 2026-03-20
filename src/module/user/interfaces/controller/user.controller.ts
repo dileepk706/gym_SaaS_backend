@@ -2,7 +2,7 @@ import IUserController from '@/module/user/domain/interfaces/user.controller.int
 import { Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import IUserService from '@/module/user/domain/interfaces/user.services.interface.js';
-import { responseHandler } from '@/shared/response_handler.js';
+import { sendSuccess } from '@/shared/response_handler.js';
 
 @injectable()
 class UserController implements IUserController {
@@ -10,7 +10,7 @@ class UserController implements IUserController {
 
   createUser = async (req: Request, res: Response) => {
     const result = await this.userService.create(req.body);
-    return responseHandler(res, result, 'User created successfully', 201);
+    return sendSuccess(res, result, 'User created successfully', 201);
   };
 }
 

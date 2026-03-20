@@ -8,7 +8,7 @@ export type DecodedToken = {
 declare global {
   namespace Express {
     interface Request {
-      user?: DecodedToken;
+      user: DecodedToken;
     }
   }
 }

@@ -10,6 +10,7 @@ import registerOnboardingModule from '@/module/onboarding/onboarding.container.j
 import registerStaffModule from '@/module/staff/staff.container.js';
 import registerRoleModule from '@/module/role/role.container.js';
 import DbSharedService from '@/shared/services/db.shared.service.js';
+import registerStaffPermissionModule from '@/module/staff-permissions/staff-permission.container.js';
 
 const registerDependencies = () => {
   container.registerInstance(Pool, pool);
@@ -21,6 +22,7 @@ const registerDependencies = () => {
   registerOnboardingModule(container);
   registerStaffModule(container);
   registerRoleModule(container);
+  registerStaffPermissionModule(container);
 };
 
 export default registerDependencies;

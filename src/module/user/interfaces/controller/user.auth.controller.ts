@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 //
-import { cookieHandler, responseHandler } from '@/shared/response_handler.js';
+import { cookieHandler, sendSuccess } from '@/shared/response_handler.js';
 import IUserAuthController from '@/module/user/domain/interfaces/user.auth.controller.interface.js';
 import TokenService from '@/module/token/application/services/token.service.js';
 import IUserService from '@/module/user/domain/interfaces/user.services.interface.js';
@@ -32,7 +32,7 @@ class UserAuthController implements IUserAuthController {
 
     cookieHandler(res, { refreshToken }, 'refresh_token');
 
-    return responseHandler(
+    return sendSuccess(
       res,
       { accessToken, refreshToken },
       'User logged in successfully',
@@ -44,7 +44,7 @@ class UserAuthController implements IUserAuthController {
     const token = req.cookies?.refresh_token || req.body.refresh_token;
     this.tokenService.deleteRefreshTokenByTokenHash(hashToken(token));
     res.clearCookie('refresh_token');
-    return responseHandler(res, {}, 'Logged out successfully', httpStatus.OK);
+    return sendSuccess(res, {}, 'Logged out successfully', httpStatus.OK);
   };
 }
 

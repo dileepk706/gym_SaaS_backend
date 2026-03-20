@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe';
 import httpStatus from 'http-status';
 //
 import { ApiError } from '@/shared/middleware/error_handler.js';
-import { cookieHandler, responseHandler } from '@/shared/response_handler.js';
+import { cookieHandler, sendSuccess } from '@/shared/response_handler.js';
 import IRefreshTokenController from '@/module/token/domain/intefaces/refresh-token.controller.interface .js';
 import IRefreshTokenService from '@/module/token/domain/intefaces/refresh-token.service.interface.js';
 
@@ -25,7 +25,7 @@ class TokenController implements IRefreshTokenController {
 
     cookieHandler(res, { refreshToken: result.refreshToken }, 'refresh_token');
 
-    return responseHandler(
+    return sendSuccess(
       res,
       { accessToken: result.accessToken },
       'Token refreshed successfully',
